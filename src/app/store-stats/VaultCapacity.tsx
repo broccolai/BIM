@@ -8,6 +8,7 @@ import {
   showMaterialCount,
 } from 'app/material-counts/MaterialCountsWrappers';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { SHOW_RANDOM_STUFF } from 'app/utils/broccoli-config';
 import { emptyObject } from 'app/utils/empty';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -101,6 +102,10 @@ export default React.memo(function VaultCapacity() {
   const vaultCounts = useSelector(vaultCountsSelector);
   const mats = <MaterialCountsTooltip />;
   const isPhonePortrait = useIsPhonePortrait();
+
+  if (!SHOW_RANDOM_STUFF) {
+    return <></>;
+  }
 
   return (
     <>

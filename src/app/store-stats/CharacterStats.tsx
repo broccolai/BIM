@@ -7,6 +7,7 @@ import { fakeCharacterStatHashes } from 'app/inventory/d2-stores';
 import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { statTier } from 'app/loadout-builder/utils';
 import { armorStats } from 'app/search/d2-known-values';
+import { SHOW_RANDOM_STUFF } from 'app/utils/broccoli-config';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -111,6 +112,10 @@ export function LoadoutStats({
   stats: DimStore['stats'];
   showTier?: boolean;
 }) {
+  if (!SHOW_RANDOM_STUFF) {
+    return <></>;
+  }
+
   const statInfos = armorStats
     .map((h) => stats[h])
     .map((stat) => ({

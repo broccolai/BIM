@@ -8,6 +8,7 @@ import ItemFeedSidebar from 'app/item-feed/ItemFeedSidebar';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import StoreStats from 'app/store-stats/StoreStats';
+import { ITEM_FEED } from 'app/utils/broccoli-config';
 import { useEventBusListener } from 'app/utils/hooks';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -106,7 +107,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
           hidePostmaster={false}
         />
       </div>
-      {$featureFlags.itemFeed && <ItemFeedSidebar />}
+      {ITEM_FEED && $featureFlags.itemFeed && <ItemFeedSidebar />}
     </div>
   );
 }

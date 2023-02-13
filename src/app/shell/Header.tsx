@@ -8,6 +8,7 @@ import { accountRoute } from 'app/routes';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import DimApiWarningBanner from 'app/storage/DimApiWarningBanner';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { DISABLE_BRANDING, SHOW_RANDOM_STUFF } from 'app/utils/broccoli-config';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import { Portal } from 'app/utils/temp-container';
@@ -187,17 +188,18 @@ export default function Header() {
         to: `${path}/vendors`,
         text: t('Vendors.Vendors'),
       },
-      account.destinyVersion === 2 && {
-        to: `${path}/records`,
-        text: t('Records.Title'),
-      },
+      account.destinyVersion === 2 &&
+        SHOW_RANDOM_STUFF && {
+          to: `${path}/records`,
+          text: t('Records.Title'),
+        },
       account.destinyVersion === 2
         ? { to: `${path}/loadouts`, text: t('Loadouts.Loadouts') }
         : {
             to: `${path}/optimizer`,
             text: t('LB.LB'),
           },
-      {
+      SHOW_RANDOM_STUFF && {
         to: `${path}/organizer`,
         text: t('Organizer.Organizer'),
       },
@@ -277,18 +279,20 @@ export default function Header() {
   return (
     <header className={styles.container} ref={headerRef}>
       <div className={styles.header}>
-        <a
-          className={clsx(styles.menuItem, styles.menu)}
-          ref={dropdownToggler}
-          onClick={toggleDropdown}
-          role="button"
-          aria-haspopup="menu"
-          aria-label={t('Header.Menu')}
-          aria-expanded={dropdownOpen}
-        >
-          <AppIcon icon={menuIcon} />
-          <MenuBadge />
-        </a>
+        {!DISABLE_BRANDING && (
+          <a
+            className={clsx(styles.menuItem, styles.menu)}
+            ref={dropdownToggler}
+            onClick={toggleDropdown}
+            role="button"
+            aria-haspopup="menu"
+            aria-label={t('Header.Menu')}
+            aria-expanded={dropdownOpen}
+          >
+            <AppIcon icon={menuIcon} />
+            <MenuBadge />
+          </a>
+        )}
         <TransitionGroup component={null}>
           {dropdownOpen && (
             <CSSTransition
@@ -336,15 +340,17 @@ export default function Header() {
             </CSSTransition>
           )}
         </TransitionGroup>
-        <Link to="/" className={clsx(styles.menuItem, styles.logoLink)}>
-          <img
-            className={clsx(styles.logo, logoStyles[$DIM_FLAVOR])}
-            title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
-            src={logo}
-            alt="DIM"
-            aria-label="dim"
-          />
-        </Link>
+        {!DISABLE_BRANDING && (
+          <Link to="/" className={clsx(styles.menuItem, styles.logoLink)}>
+            <img
+              className={clsx(styles.logo, logoStyles[$DIM_FLAVOR])}
+              title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
+              src={logo}
+              alt="DIM"
+              aria-label="dim"
+            />
+          </Link>
+        )}
         <div className={styles.headerLinks}>{reverseDestinyLinks}</div>
         <div className={styles.headerRight}>
           {account && !isPhonePortrait && (

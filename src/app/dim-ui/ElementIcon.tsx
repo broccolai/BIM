@@ -1,4 +1,5 @@
 import { useD2Definitions } from 'app/manifest/selectors';
+import { SHOW_ELEMENT } from 'app/utils/broccoli-config';
 import { DestinyDamageTypeDefinition, DestinyEnergyTypeDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { bungieBackgroundStyle } from './BungieImage';
@@ -13,7 +14,7 @@ export default function ElementIcon({
 }) {
   const defs = useD2Definitions();
 
-  if (!element) {
+  if (SHOW_ELEMENT || !element) {
     return null;
   }
 

@@ -72,7 +72,7 @@
   font-size: calc((var(--item-size) / 3));
   margin: calc((var(--item-size) / 8) - 4px) auto calc((var(--item-size) / 8) - 4px) auto;
   padding: 4px;
-  opacity: 0.3;
+  opacity: 0;
   transition: opacity 0.3s ease-in-out;
   &:hover {
     opacity: 1;

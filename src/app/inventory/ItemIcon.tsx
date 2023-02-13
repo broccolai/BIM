@@ -3,6 +3,7 @@ import BungieImage, { bungieBackgroundStyle, bungieNetPath } from 'app/dim-ui/Bu
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { d2MissingIcon } from 'app/search/d2-known-values';
+import { ALL_MASTERWORKED, ARMOR_COST, DEEPSIGHT, SHOW_SEASONS } from 'app/utils/broccoli-config';
 import { errorLog } from 'app/utils/log';
 import { isModCostVisible } from 'app/utils/socket-utils';
 import {
@@ -35,7 +36,7 @@ export function getItemImageStyles(item: DimItem, className?: string) {
   const itemImageStyles = clsx('item-img', className, {
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless,
-    [styles.masterwork]: item.masterwork,
+    [styles.masterwork]: ALL_MASTERWORKED || item.masterwork,
     [styles.deepsight]: item.deepsightInfo,
     [styles.bucketIcon]: useClassifiedPlaceholder,
     [itemTierStyles[item.tier]]: !borderless && !item.plug,
@@ -61,19 +62,19 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       ) : (
         <div style={bungieBackgroundStyle(item.icon)} className={itemImageStyles} />
       )}
-      {item.iconOverlay && (
+      {SHOW_SEASONS && item.iconOverlay && (
         <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
       )}
-      {(item.masterwork || item.deepsightInfo) && (
+      {(ALL_MASTERWORKED || item.masterwork || item.deepsightInfo) && (
         <div
-          className={clsx(styles.backgroundOverlay, {
-            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic,
-            [styles.exoticMasterwork]: item.masterwork && item.isExotic,
+          className={clsx(styles.backgroundOverlay, ALL_MASTERWORKED && styles.masterwork, {
+            [styles.legendaryMasterwork]: (ALL_MASTERWORKED || item.masterwork) && !item.isExotic,
+            [styles.exoticMasterwork]: (ALL_MASTERWORKED || item.masterwork) && item.isExotic,
             [styles.deepsightBorder]: item.deepsightInfo,
           })}
         />
       )}
-      {item.plug?.costElementIcon && (
+      {ARMOR_COST && item.plug?.costElementIcon && (
         <>
           <div
             style={bungieBackgroundStyle(item.plug.costElementIcon)}
@@ -86,16 +87,18 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           </svg>
         </>
       )}
-      {item.highlightedObjective &&
+      {DEEPSIGHT &&
+        item.highlightedObjective &&
         (!item.deepsightInfo || item.deepsightInfo.attunementObjective.complete) && (
           <img className={styles.highlightedObjective} src={pursuitComplete} />
         )}
-      {Boolean(
-        item.deepsightInfo &&
-          !item.deepsightInfo.attunementObjective.complete &&
-          item.patternUnlockRecord &&
-          item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
-      ) && <div className={styles.deepsightPattern} />}
+      {DEEPSIGHT &&
+        Boolean(
+          item.deepsightInfo &&
+            !item.deepsightInfo.attunementObjective.complete &&
+            item.patternUnlockRecord &&
+            item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
+        ) && <div className={styles.deepsightPattern} />}
     </>
   );
 }
@@ -135,7 +138,9 @@ export function DefItemIcon({
   );
   const modInfo = defs && getModCostInfo(itemDef, defs);
 
-  const iconOverlay = itemDef.iconWatermark || itemDef.iconWatermarkShelved || undefined;
+  const iconOverlay = SHOW_SEASONS
+    ? itemDef.iconWatermark || itemDef.iconWatermarkShelved
+    : undefined;
 
   return (
     <>

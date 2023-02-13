@@ -1,4 +1,11 @@
 import { getColor } from 'app/shell/formatters';
+import {
+  ALL_MASTERWORKED,
+  DEEPSIGHT,
+  SHOW_CRAFTED,
+  SHOW_ELEMENT,
+  SHOW_THUMBSUP,
+} from 'app/utils/broccoli-config';
 import { isD1Item } from 'app/utils/item-utils';
 import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
@@ -68,26 +75,28 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
     (item.classified && <ClassifiedNotes item={item} />);
 
   const fixContrast =
-    (item.energy &&
+    (SHOW_ELEMENT &&
+      item.energy &&
       (item.energy.energyType === DestinyEnergyType.Arc ||
         item.energy.energyType === DestinyEnergyType.Void)) ||
     (item.element &&
       (item.element.enumValue === DamageType.Arc || item.element.enumValue === DamageType.Void));
 
-  const wishlistRollIcon = toUiWishListRoll(wishlistRoll);
-  const summaryIcon = item.crafted ? (
-    <img className={styles.shapedIcon} src={shapedIcon} />
-  ) : (
-    wishlistRollIcon && <RatingIcon uiWishListRoll={wishlistRollIcon} />
-  );
+  const wishlistRollIcon = SHOW_THUMBSUP && toUiWishListRoll(wishlistRoll);
+  const summaryIcon =
+    SHOW_CRAFTED && item.crafted ? (
+      <img className={styles.shapedIcon} src={shapedIcon} />
+    ) : (
+      wishlistRollIcon && <RatingIcon uiWishListRoll={wishlistRollIcon} />
+    );
 
   return (
     <div
       className={clsx(styles.badge, {
         [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
         [styles.capped]: isCapped,
-        [styles.masterwork]: item.masterwork,
-        [styles.deepsight]: item.deepsightInfo,
+        [styles.masterwork]: ALL_MASTERWORKED || item.masterwork,
+        [styles.deepsight]: DEEPSIGHT ? item.deepsightInfo : undefined,
         [styles.engram]: item.isEngram,
       })}
     >
@@ -97,25 +106,27 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
         </div>
       )}
       {summaryIcon}
-      {item.energy ? (
-        <>
-          <span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
-            {item.energy.energyCapacity}
-          </span>
-          <ElementIcon
-            element={item.element}
-            className={clsx(styles.energyCapacityIcon, { [styles.fixContrast]: fixContrast })}
-          />
-        </>
-      ) : (
-        item.element &&
-        !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
-          <ElementIcon
-            element={item.element}
-            className={clsx({ [styles.fixContrast]: fixContrast })}
-          />
-        )
-      )}
+
+      {SHOW_ELEMENT &&
+        (item.energy ? (
+          <>
+            <span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
+              {item.energy.energyCapacity}
+            </span>
+            <ElementIcon
+              element={item.element}
+              className={clsx(styles.energyCapacityIcon, { [styles.fixContrast]: fixContrast })}
+            />
+          </>
+        ) : (
+          item.element &&
+          !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
+            <ElementIcon
+              element={item.element}
+              className={clsx({ [styles.fixContrast]: fixContrast })}
+            />
+          )
+        ))}
       <span className={styles.badgeContent}>{badgeContent}</span>
     </div>
   );

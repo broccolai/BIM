@@ -21,8 +21,8 @@ $header-height: 44px;
 .header {
   width: 100%;
   box-sizing: border-box;
-  padding-left: env(safe-area-inset-left, 2px);
-  padding-right: env(safe-area-inset-right);
+  padding-left: 16px;
+  padding-right: 8px;
   padding-top: env(safe-area-inset-top);
   height: $header-height;
   height: calc(#{$header-height} + env(safe-area-inset-top));

@@ -55,7 +55,7 @@ export default React.forwardRef(function SearchFilter(
         ? t('Header.FilterHelpLoadouts')
         : isPhonePortrait
         ? t('Header.FilterHelpBrief')
-        : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' }),
+        : '',
     [isPhonePortrait, onRecords, onProgress, onOptimizer, onLoadouts]
   );
 

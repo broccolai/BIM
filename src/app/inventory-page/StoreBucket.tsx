@@ -16,6 +16,7 @@ import { itemSorterSelector } from 'app/settings/item-sort';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
+import { SHOW_CLASS_ICONS } from 'app/utils/broccoli-config';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -154,7 +155,7 @@ function StoreBucket({
       >
         {classTypeOrder.map((classType) => (
           <React.Fragment key={classType}>
-            <ClassIcon classType={classType} className="armor-class-icon" />
+            {SHOW_CLASS_ICONS && <ClassIcon classType={classType} className="armor-class-icon" />}
             {sortItems(itemsByClass[classType]).map((item) => (
               <StoreInventoryItem key={item.index} item={item} />
             ))}

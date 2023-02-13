@@ -1,4 +1,5 @@
 import { percent } from 'app/shell/formatters';
+import { DEEPSIGHT, SHOW_TAGS } from 'app/utils/broccoli-config';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
@@ -96,14 +97,14 @@ export default function InventoryItem({
     const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
     return (
       <>
-        {item.percentComplete > 0 && !item.complete && (
+        {DEEPSIGHT && item.percentComplete > 0 && !item.complete && (
           <div className={styles.xpBar}>
             <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
           </div>
         )}
         <ItemIcon item={item} />
         <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
-        {(tag || item.locked || notes) && (
+        {SHOW_TAGS && (tag || item.locked || notes) && (
           <div className={styles.icons}>
             {item.locked && (!autoLockTagged || !tag || !canSyncLockState(item)) && (
               <AppIcon

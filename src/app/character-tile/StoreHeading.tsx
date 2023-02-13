@@ -1,6 +1,7 @@
 import { t } from 'app/i18next-t';
 import { isD1Store } from 'app/inventory/stores-helpers';
 import LoadoutPopup from 'app/loadout/loadout-menu/LoadoutPopup';
+import { SHOW_RANDOM_STUFF } from 'app/utils/broccoli-config';
 import clsx from 'clsx';
 import React, { useCallback, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -43,9 +44,11 @@ function CharacterHeader({
       onClick={onClick}
     >
       <CharacterTile store={store} />
-      <div className="loadout-button">
-        <AppIcon icon={kebabIcon} title={t('Loadouts.Loadouts')} />
-      </div>
+      {SHOW_RANDOM_STUFF && (
+        <div className="loadout-button">
+          <AppIcon icon={kebabIcon} title={t('Loadouts.Loadouts')} />
+        </div>
+      )}
       {!store.isVault && isD1Store(store) && <CharacterHeaderXPBar store={store} />}
     </div>
   );
